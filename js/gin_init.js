@@ -1,6 +1,10 @@
-/* To inject this as early as possible and to bypass Drupal's
+/**
+ * @file
+ * JavaScript file to init settings
+ *
+ * To inject this as early as possible and to bypass Drupal's
  * behaviors we use native JS.
-*/
+ */
 
 if (localStorage.getItem('GinSidebarOpen')) {
   const style = document.createElement('style');

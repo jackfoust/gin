@@ -1,8 +1,13 @@
+/**
+ * @file
+ * JavaScript file for CKEditor overrides
+ */
+
 /* eslint-disable func-names, no-mutable-exports, comma-dangle, strict */
 
 'use strict';
 
-(($, Drupal, drupalSettings) => {
+((Drupal, drupalSettings) => {
   Drupal.behaviors.ginCKEditorContextMenu = {
     attach: function attach() {
       if (window.CKEDITOR && CKEDITOR !== undefined) {
@@ -36,17 +41,31 @@
 
         CKEDITOR.on('instanceReady', function() {
           // Main window of CKEDITOR.
-          $('.cke_wysiwyg_frame').contents().find('body').addClass(ginClasses).attr('data-gin-accent', accentColorPreset);
+          Drupal.behaviors.ginCKEditorContextMenu.setClasses('.cke_wysiwyg_frame', ginClasses, accentColorPreset);
         });
 
         // Watch for changes and inject styles.
         const observer = new MutationObserver(function() {
           // Contextmenu.
-          $('body > .cke_menu_panel > iframe').contents().find('body').addClass(ginClasses).attr('data-gin-accent', accentColorPreset);
+          Drupal.behaviors.ginCKEditorContextMenu.setClasses('body > .cke_menu_panel > iframe', ginClasses, accentColorPreset);
         });
 
         observer.observe(document.body, { childList: true });
       }
+    },
+    setClasses(element, ginClasses, accentColorPreset) {
+      const elements = document.querySelectorAll(element);
+
+      elements.forEach(element => {
+        const bodyCKE = element?.contentDocument.querySelector('body');
+
+        if (!bodyCKE) return false;
+        bodyCKE.setAttribute('data-gin-accent', accentColorPreset);
+
+        ginClasses.forEach(ginClass => {
+          bodyCKE.classList.add(ginClass);
+        });
+      });
     }
   };
-})(jQuery, Drupal, drupalSettings);
+})(Drupal, drupalSettings);

@@ -1,8 +1,13 @@
+/**
+ * @file
+ * JavaScript file for Gin Edit Form
+ */
+
 /* eslint-disable func-names, no-mutable-exports, comma-dangle, strict */
 
 'use strict';
 
-(($, Drupal, drupalSettings) => {
+((Drupal) => {
   Drupal.behaviors.ginEditForm = {
     attach: function attach() {
       const form = document.querySelector('.region-content form');
@@ -24,4 +29,4 @@
       }
     }
   };
-})(jQuery, Drupal, drupalSettings);
+})(Drupal);

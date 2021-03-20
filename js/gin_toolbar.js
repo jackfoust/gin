@@ -1,57 +1,68 @@
+/**
+ * @file
+ * JavaScript file for Gin Toolbar
+ */
+
 /* eslint-disable func-names, no-mutable-exports, comma-dangle, strict */
 
 'use strict';
 
-(($, Drupal, drupalSettings) => {
+((Drupal) => {
   Drupal.behaviors.ginToolbarToggle = {
     attach: function attach(context) {
+      const body = document.querySelector('body');
+      const trigger = context.querySelector('.toolbar-menu__trigger');
+
+      // Wrong context, exit
+      if (!trigger) return;
+
       // Set sidebarState.
       if (localStorage.getItem('GinSidebarOpen') === 'true') {
-        $('body').attr('data-toolbar-menu', 'open');
-        $('.toolbar-menu__trigger').addClass('is-active');
+        body.setAttribute('data-toolbar-menu', 'open');
+        trigger.classList.add('is-active');
       }
       else {
-        $('body').attr('data-toolbar-menu', '');
-        $('.toolbar-menu__trigger').removeClass('is-active');
+        body.removeAttribute('data-toolbar-menu');
+        trigger.classList.remove('is-active');
       }
 
       // Toolbar toggle
-      $('.toolbar-menu__trigger', context).on('click', function (e) {
-        e.preventDefault();
+      trigger?.addEventListener('click', (event) => {
+        event.preventDefault();
+        const $this = event.target;
+        const body = document.querySelector('body');
 
         // Toggle active class.
-        $(this).toggleClass('is-active');
+        $this.classList.toggle('is-active');
 
         // Set active state.
         let active = 'true';
-        if ($(this).hasClass('is-active')) {
-          $('body').attr('data-toolbar-menu', 'open');
+        if ($this.classList.contains('is-active')) {
+          body.setAttribute('data-toolbar-menu', 'open');
         }
         else {
-          $('body').attr('data-toolbar-menu', '');
+          body.removeAttribute('data-toolbar-menu');
           active = 'false';
-          $('.gin-toolbar-inline-styles').remove();
+          document.querySelector('.gin-toolbar-inline-styles')?.remove();
         }
 
         // Write state to localStorage.
         localStorage.setItem('GinSidebarOpen', active);
 
         // Dispatch event.
-        const event = new CustomEvent('toolbar-toggle', { detail: active === 'true'})
-        document.dispatchEvent(event);
+        const customEvent = new CustomEvent('toolbar-toggle', { detail: active === 'true'})
+        document.dispatchEvent(customEvent);
       });
 
-      // Change when clicked
-      $('#toolbar-bar .toolbar-item', context).on('click', function () {
-        $('body').attr('data-toolbar-tray', $(this).data('toolbar-tray'));
-
-        // Sticky toolbar width
-        $(document).ready(() => {
-          $('.sticky-header').each(function () {
-            $(this).width($('.sticky-table').width());
-          });
-        });
+      // Set sticky table width
+      document.querySelector('.toolbar-menu-administration').addEventListener('transitionend', () => {
+        Drupal.behaviors.ginToolbarToggle.updateStickyTableWidth();
       });
+    },
+    updateStickyTableWidth() {
+      const element = document.querySelector('.sticky-header');
+      if (!element) return;
+      element.style.width = `${element.nextSibling.clientWidth}px`;
     }
   };
-})(jQuery, Drupal, drupalSettings);
+})(Drupal);

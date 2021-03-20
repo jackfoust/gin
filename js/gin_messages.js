@@ -1,25 +1,28 @@
 /**
  * @file
- *   Main JavaScript file for Dismiss module
+ * JavaScript file to dismiss messages
  */
 
 /* eslint-disable func-names, no-mutable-exports, comma-dangle, strict */
 
 'use strict';
 
-(($, Drupal, drupalSettings) => {
+((Drupal) => {
   Drupal.behaviors.ginMessagesDismiss = {
-    attach: function(context, settings) {
-      $('.messages .button--dismiss').once('messages-dismiss').click(function(event) {
-        event.preventDefault();
-        const $elem = $(this).parents('.messages-list__item');
+    attach: function() {
+      document.querySelectorAll('.messages .button--dismiss').forEach(message => {
+        message.addEventListener('click', event => {
+          event.preventDefault();
+          const element = event.target.closest('.messages-list__item');
 
-        $elem.css('opacity', 0);
-        $elem.bind('transitionend', function() {
-          $(this).addClass('visually-hidden');
-          $(this).css('opacity', 1);
-        })
+          element.style.opacity = 0;
+
+          element.addEventListener('transitionend', () => {
+            element.classList.add('visually-hidden');
+            element.style.opacity = 1;
+          });
+        });
       });
     }
   }
-})(jQuery, Drupal, drupalSettings);
+})(Drupal);

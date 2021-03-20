@@ -1,8 +1,13 @@
+/**
+ * @file
+ * JavaScript file for Gin accent colors
+ */
+
 /* eslint-disable no-bitwise, no-nested-ternary, no-mutable-exports, comma-dangle, strict */
 
 'use strict';
 
-(($, Drupal, drupalSettings) => {
+((Drupal, drupalSettings) => {
   Drupal.behaviors.ginAccent = {
     attach: function attach() {
       const path = drupalSettings.path.currentPath;
@@ -36,30 +41,31 @@
 
     setAccentColor: function setAccentColor(preset = null, color = null) {
       const accentColorPreset = preset != null ? preset : drupalSettings.gin.preset_accent_color;
+      const body = document.querySelector('body');
 
       // Clear things up if not custom color is set.
       if (accentColorPreset === 'custom') {
         // Set preset color.
-        $('body').attr('data-gin-accent', preset);
+        body.setAttribute('data-gin-accent', preset);
         Drupal.behaviors.ginAccent.setCustomAccentColor('custom', color);
       } else {
         // Set preset color.
-        $('body').attr('data-gin-accent', accentColorPreset);
+        body.setAttribute('data-gin-accent', accentColorPreset);
       }
     },
 
     setCustomAccentColor: function setCustomAccentColor(preset = null, color = null) {
       const accentColorSetting = color != null ? color : drupalSettings.gin.accent_color;
+      const body = document.querySelector('body');
 
       // If custom color is set, generate colors through JS.
       if (preset === 'custom') {
         // Set preset color.
-        $('body').attr('data-gin-accent', preset);
+        body.setAttribute('data-gin-accent', preset);
 
         const darkmode = preset != null
-        ? $('input[name="enable_darkmode"]').is(':checked')
+        ? document.querySelector('input[name="enable_darkmode"]')?.matches(':checked')
         : drupalSettings.gin.darkmode;
-        const darkmodeClass = drupalSettings.gin.darkmode_class;
         const ratio = darkmode ? 10 : 6.5;
         const accentColor = accentColorSetting;
 
@@ -68,7 +74,7 @@
 
           const strippedAccentColor = accentColor.replace('#', '');
 
-          const styles = `<style class="gin-custom-colors">\
+          const styles = `\
             body:not(.gin-inactive) {\n\
               --colorGinPrimary: ${accentColor};\n\
               --colorGinPrimaryHover: ${Drupal.behaviors.ginAccent.shadeColor(accentColor, -10)};\n\
@@ -84,15 +90,18 @@
             .form-element--type-select:focus {\n\
               background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3E%3Cpath fill='none' stroke-width='1.5' d='M1 1L7 7L13 1' stroke='%23${strippedAccentColor}'/%3E%3C/svg%3E%0A");\n\
             }\n\
-            </style>`;
+          `;
 
-          $('body').append(styles);
+          const styleElement = document.createElement('style');
+          styleElement.classList.add('gin-custom-colors');
+          styleElement.innerHTML = styles;
+          body.append(styleElement);
         }
       }
     },
 
     clearAccentColor: function clearAccentColor() {
-      $('.gin-custom-colors').remove();
+      document.querySelector('.gin-custom-colors')?.remove();
     },
 
     shadeColor: function shadeColor(color, percent) {
@@ -144,12 +153,12 @@
             break;
         }
 
-        $('body').css('--colorGinFocus', setColor);
+        document.querySelector('body').setAttribute('style', `--colorGinFocus: ${setColor};`);
       }
     },
 
     clearFocusColor: function clearFocusColor() {
-      $('body').css('--colorGinFocus', '');
+      document.querySelector('body').removeAttribute('style');
     },
   };
-})(jQuery, Drupal, drupalSettings);
+})(Drupal, drupalSettings);
