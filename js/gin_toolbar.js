@@ -12,36 +12,37 @@
     attach: function attach(context) {
       const body = document.querySelector('body');
       const trigger = context.querySelector('.toolbar-menu__trigger');
+      const dataToolbarMenu = 'data-toolbar-menu';
+      const activeClass = 'is-active';
 
       // Wrong context, exit
       if (!trigger) return;
 
       // Set sidebarState.
       if (localStorage.getItem('GinSidebarOpen') === 'true') {
-        body.setAttribute('data-toolbar-menu', 'open');
-        trigger.classList.add('is-active');
+        body.setAttribute(dataToolbarMenu, 'open');
+        trigger.classList.add(activeClass);
       }
       else {
-        body.removeAttribute('data-toolbar-menu');
-        trigger.classList.remove('is-active');
+        body.removeAttribute(dataToolbarMenu);
+        trigger.classList.remove(activeClass);
       }
 
       // Toolbar toggle
       trigger?.addEventListener('click', (event) => {
         event.preventDefault();
         const $this = event.target;
-        const body = document.querySelector('body');
 
         // Toggle active class.
-        $this.classList.toggle('is-active');
+        $this.classList.toggle(activeClass);
 
         // Set active state.
         let active = 'true';
-        if ($this.classList.contains('is-active')) {
-          body.setAttribute('data-toolbar-menu', 'open');
+        if ($this.classList.contains(activeClass)) {
+          body.setAttribute(dataToolbarMenu, 'open');
         }
         else {
-          body.removeAttribute('data-toolbar-menu');
+          body.removeAttribute(dataToolbarMenu);
           active = 'false';
           document.querySelector('.gin-toolbar-inline-styles')?.remove();
         }

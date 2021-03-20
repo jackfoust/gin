@@ -131,31 +131,31 @@
     },
 
     darkmode: function darkmode(darkmodeParam = null) {
-      const darkmodeEnabled = darkmodeParam != null ? darkmodeParam : drupalSettings.gin.darkmode;
-      const darkmodeClass = drupalSettings.gin.darkmode_class;
-      const body = document.querySelector('body');
+      const enabled = darkmodeParam != null ? darkmodeParam : drupalSettings.gin.darkmode;
+      const className = drupalSettings.gin.darkmode_class;
 
-      // Needs to check for both: backwards compatibility.
-      if (darkmodeEnabled === true || darkmodeEnabled === 1) {
-        body.classList.add(darkmodeClass);
-      }
-      else {
-        body.classList.remove(darkmodeClass);
-      }
+      // Toggle Class
+      Drupal.behaviors.ginSettings.toggleClass(enabled, className);
     },
 
     setHighContrastMode: function setHighContrastMode(param = null) {
       const enabled = param != null ? param : drupalSettings.gin.highcontrastmode;
       const className = drupalSettings.gin.highcontrastmode_class;
+
+      // Toggle Class
+      Drupal.behaviors.ginSettings.toggleClass(enabled, className);
+    },
+
+    toggleClass(value, className) {
       const body = document.querySelector('body');
 
       // Needs to check for both: backwards compatibility.
-      if (enabled === true || enabled === 1) {
+      if (value === true || value === 1) {
         body.classList.add(className);
       }
       else {
         body.classList.remove(className);
       }
-    },
+    }
   };
 })(Drupal, drupalSettings);
