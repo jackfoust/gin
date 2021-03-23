@@ -1,1 +1,30 @@
-!function(t){function e(o){if(n[o])return n[o].exports;var r=n[o]={i:o,l:!1,exports:{}};return t[o].call(r.exports,r,r.exports,e),r.l=!0,r.exports}var n={};e.m=t,e.c=n,e.d=function(t,n,o){e.o(t,n)||Object.defineProperty(t,n,{enumerable:!0,get:o})},e.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},e.t=function(t,n){if(1&n&&(t=e(t)),8&n)return t;if(4&n&&"object"==typeof t&&t&&t.__esModule)return t;var o=Object.create(null);if(e.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:t}),2&n&&"string"!=typeof t)for(var r in t)e.d(o,r,function(e){return t[e]}.bind(null,r));return o},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="../",e(e.s=59)}({59:function(t,e,n){n(60),t.exports=n(61)},60:function(){"use strict";var t,e;t=Drupal,e=drupalSettings,t.behaviors.ginCKEditorContextMenu={attach:function(){if(window.CKEDITOR&&void 0!==CKEDITOR){if(-1<e.path.currentPath.indexOf("admin/config/content/formats/manage"))return;var n=e.gin.accent_css_path,o=e.gin.ckeditor_css_path,r=e.gin.preset_accent_color,i=[];e.gin.darkmode&&i.push(e.gin.darkmode_class),e.gin.highcontrastmode&&i.push(e.gin.highcontrastmode_class),void 0===CKEDITOR.config.contextmenu_contentsCss&&(CKEDITOR.config.contextmenu_contentsCss=[],CKEDITOR.config.contextmenu_contentsCss.push(CKEDITOR.skin.getPath("editor")),CKEDITOR.config.contextmenu_contentsCss.push(n),CKEDITOR.config.contextmenu_contentsCss.push(o)),CKEDITOR.on("instanceReady",(function(){t.behaviors.ginCKEditorContextMenu.setClasses(".cke_wysiwyg_frame",i,r)})),new MutationObserver((function(){t.behaviors.ginCKEditorContextMenu.setClasses("body > .cke_menu_panel > iframe",i,r)})).observe(document.body,{childList:!0})}},setClasses:function(t,e,n){document.querySelectorAll(t).forEach((function(t){var o=null==t?void 0:t.contentDocument.querySelector("body");return!!o&&(o.setAttribute("data-gin-accent",n),void e.forEach((function(t){o.classList.add(t)})))}))}}},61:function(){}});
+!function(Drupal, drupalSettings) {
+  Drupal.behaviors.ginCKEditorContextMenu = {
+    attach: function() {
+      if (window.CKEDITOR && void 0 !== CKEDITOR) {
+        if (drupalSettings.path.currentPath.indexOf("admin/config/content/formats/manage") > -1) return;
+        var accentCss = drupalSettings.gin.accent_css_path, contentsCss = drupalSettings.gin.ckeditor_css_path, accentColorPreset = drupalSettings.gin.preset_accent_color, ginClasses = new Array;
+        drupalSettings.gin.darkmode && ginClasses.push(drupalSettings.gin.darkmode_class), 
+        drupalSettings.gin.highcontrastmode && ginClasses.push(drupalSettings.gin.highcontrastmode_class), 
+        void 0 === CKEDITOR.config.contextmenu_contentsCss && (CKEDITOR.config.contextmenu_contentsCss = new Array, 
+        CKEDITOR.config.contextmenu_contentsCss.push(CKEDITOR.skin.getPath("editor")), CKEDITOR.config.contextmenu_contentsCss.push(accentCss), 
+        CKEDITOR.config.contextmenu_contentsCss.push(contentsCss)), CKEDITOR.on("instanceReady", (function() {
+          Drupal.behaviors.ginCKEditorContextMenu.setClasses(".cke_wysiwyg_frame", ginClasses, accentColorPreset);
+        })), new MutationObserver((function() {
+          Drupal.behaviors.ginCKEditorContextMenu.setClasses("body > .cke_menu_panel > iframe", ginClasses, accentColorPreset);
+        })).observe(document.body, {
+          childList: !0
+        });
+      }
+    },
+    setClasses: function(element, ginClasses, accentColorPreset) {
+      document.querySelectorAll(element).forEach((function(element) {
+        var bodyCKE = null == element ? void 0 : element.contentDocument.querySelector("body");
+        if (!bodyCKE) return !1;
+        bodyCKE.setAttribute("data-gin-accent", accentColorPreset), ginClasses.forEach((function(ginClass) {
+          bodyCKE.classList.add(ginClass);
+        }));
+      }));
+    }
+  };
+}(Drupal, drupalSettings);

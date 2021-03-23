@@ -1,1 +1,28 @@
-!function(e){function t(n){if(r[n])return r[n].exports;var o=r[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var r={};t.m=e,t.c=r,t.d=function(e,r,n){t.o(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:n})},t.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},t.t=function(e,r){if(1&r&&(e=t(e)),8&r)return e;if(4&r&&"object"==typeof e&&e&&e.__esModule)return e;var n=Object.create(null);if(t.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:e}),2&r&&"string"!=typeof e)for(var o in e)t.d(n,o,function(t){return e[t]}.bind(null,o));return n},t.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(r,"a",r),r},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="../",t(t.s=43)}({43:function(e,t,r){r(44),e.exports=r(45)},44:function(){"use strict";var e;(e=Drupal).behaviors.ginToolbarToggle={attach:function(t){var r=document.querySelector("body"),n=t.querySelector(".toolbar-menu__trigger"),o="data-toolbar-menu",i="is-active";n&&("true"===localStorage.getItem("GinSidebarOpen")?(r.setAttribute(o,"open"),n.classList.add(i)):(r.removeAttribute(o),n.classList.remove(i)),null==n||n.addEventListener("click",(function(e){e.preventDefault();var t=e.target;t.classList.toggle(i);var n,u="true";t.classList.contains(i)?r.setAttribute(o,"open"):(r.removeAttribute(o),u="false",null===(n=document.querySelector(".gin-toolbar-inline-styles"))||void 0===n||n.remove()),localStorage.setItem("GinSidebarOpen",u);var a=new CustomEvent("toolbar-toggle",{detail:"true"==u});document.dispatchEvent(a)})),document.querySelector(".toolbar-menu-administration").addEventListener("transitionend",(function(){e.behaviors.ginToolbarToggle.updateStickyTableWidth()})))},updateStickyTableWidth:function(){var e=document.querySelector(".sticky-header");e&&(e.style.width="".concat(e.nextSibling.clientWidth,"px"))}}},45:function(){}});
+!function(Drupal) {
+  Drupal.behaviors.ginToolbarToggle = {
+    attach: function(context) {
+      var body = document.querySelector("body"), trigger = context.querySelector(".toolbar-menu__trigger");
+      trigger && ("true" === localStorage.getItem("GinSidebarOpen") ? (body.setAttribute("data-toolbar-menu", "open"), 
+      trigger.classList.add("is-active")) : (body.removeAttribute("data-toolbar-menu"), 
+      trigger.classList.remove("is-active")), null == trigger || trigger.addEventListener("click", (function(event) {
+        event.preventDefault();
+        var $this = event.target;
+        $this.classList.toggle("is-active");
+        var _document$querySelect, active = "true";
+        $this.classList.contains("is-active") ? body.setAttribute("data-toolbar-menu", "open") : (body.removeAttribute("data-toolbar-menu"), 
+        active = "false", null === (_document$querySelect = document.querySelector(".gin-toolbar-inline-styles")) || void 0 === _document$querySelect || _document$querySelect.remove()), 
+        localStorage.setItem("GinSidebarOpen", active);
+        var customEvent = new CustomEvent("toolbar-toggle", {
+          detail: "true" === active
+        });
+        document.dispatchEvent(customEvent);
+      })), document.querySelector(".toolbar-menu-administration").addEventListener("transitionend", (function() {
+        Drupal.behaviors.ginToolbarToggle.updateStickyTableWidth();
+      })));
+    },
+    updateStickyTableWidth: function() {
+      var element = document.querySelector(".sticky-header");
+      element && (element.style.width = "".concat(element.nextSibling.clientWidth, "px"));
+    }
+  };
+}(Drupal);
