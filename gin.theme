@@ -303,7 +303,7 @@ function gin_form_user_form_alter(&$form, FormStateInterface $form_state) {
   $route_name = \Drupal::routeMatch()->getRouteName();
 
   // If new user account, don't show settings yet.
-  if ($route_name === 'user.admin_create') {
+  if ($route_name === 'user.admin_create' || $route_name == 'user.register') {
     return;
   }
 
